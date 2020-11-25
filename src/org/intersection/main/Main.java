@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.intersection.algorithm.GrahamScan;
 
 /**
  * 主界面，左区域画板，右区域，控制按钮
@@ -168,6 +169,7 @@ public class Main {
 					Main.this.messageBox("区域选点数不能少于三个");
 					return;
 				}
+				list = GrahamScan.grahamScan(list);
 				for (int i = 0; i < list.size(); i++) {
 					GC gc = new GC(mainView.left);
 					gc.setLineWidth(2);
