@@ -26,6 +26,7 @@ public class Main {
 	public static Main mainView;
 	public Display display;
 	public Shell shell;
+	
 	public Composite left;
 	/** 选择的区域按钮 */
 	public Button areaButton;
