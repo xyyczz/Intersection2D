@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * 主界面
+ * 主界面，左区域画板，右区域，控制按钮
  * @author zhaijz
  */
 public class Main {
@@ -27,7 +27,6 @@ public class Main {
 	public Display display;
 	public Shell shell;
 	public Composite left;
-<<<<<<< HEAD
 	/** 选择的区域按钮 */
 	public Button areaButton;
 	/** A区域按钮 */
@@ -36,9 +35,6 @@ public class Main {
 	public List<Point> listA = new ArrayList<>();
 	/** B区域点列表 */
 	public List<Point> listB = new ArrayList<>();
-=======
-	public List<Point> list = new ArrayList<>();
->>>>>>> df7c2ddde3a15134fedd0ea917ef4ceb932a0c04
 
 	public static void main(String[] args) {
 		mainView = new Main();
@@ -79,8 +75,7 @@ public class Main {
 		composite.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseUp(MouseEvent arg0) {
-
-<<<<<<< HEAD
+				
 			}
 
 			@Override
@@ -123,20 +118,7 @@ public class Main {
 			
 			@Override
 			public void mouseUp(MouseEvent arg0) {
-				
-=======
-			}
 
-			@Override
-			public void mouseDown(MouseEvent arg0) {
-				GC gc = new GC(composite);
-				gc.setForeground(display.getSystemColor(SWT.COLOR_BLUE));
-				gc.drawPoint(arg0.x, arg0.y);
-				gc.setBackground(display.getSystemColor(SWT.COLOR_RED));
-//				gc.drawOval(arg0.x, arg0.y, 30, 30);
-				gc.fillOval(arg0.x, arg0.y, 3, 3);
-				Main.this.list.add(new Point(arg0.x, arg0.y));
->>>>>>> df7c2ddde3a15134fedd0ea917ef4ceb932a0c04
 			}
 
 			@Override
@@ -149,63 +131,25 @@ public class Main {
 
 			}
 		});
-<<<<<<< HEAD
 		Button buttonB = new Button(composite, SWT.PUSH);
 		buttonB.setText("B区域选点");
 		buttonB.addMouseListener(new MouseListener() {
 			
-=======
-	}
-	
-	private void createRightView() {
-		Composite composite = new Composite(this.shell, SWT.BORDER);
-		Rectangle clientArea = this.shell.getClientArea();
-		composite.setLayoutData(new RowData((int)(clientArea.width * 0.27), clientArea.height));
-		
-		FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
-		fillLayout.marginHeight = 15;
-		fillLayout.marginWidth = 15;
-		fillLayout.spacing = 20;
-		composite.setLayout(fillLayout);
-		
-		Button buttonA = new Button(composite, SWT.PUSH);
-		buttonA.setText("A区域选点");
-		Button buttonB = new Button(composite, SWT.PUSH);
-		buttonB.setText("B区域选点");
-		
-		Button button1 = new Button(composite, SWT.PUSH);
-		button1.setSize(100, 50);
-		button1.setText("计算凸包");
-		button1.addMouseListener(new MouseListener() {
-
->>>>>>> df7c2ddde3a15134fedd0ea917ef4ceb932a0c04
 			@Override
 			public void mouseUp(MouseEvent arg0) {
-				for (int i = 0; i < mainView.list.size(); i++) {
-					GC gc = new GC(mainView.left);
-					gc.setLineWidth(2);
-					Point beginPoint = mainView.list.get(i);
-					Point endPoint = mainView.list.get((i + 1) % mainView.list.size());
-					gc.drawLine(beginPoint.x, beginPoint.y, endPoint.x, endPoint.y);
-					gc.dispose();
-				}
+
 			}
 
 			@Override
 			public void mouseDown(MouseEvent arg0) {
-<<<<<<< HEAD
 				Main.this.areaButton = buttonB;
-=======
-				
->>>>>>> df7c2ddde3a15134fedd0ea917ef4ceb932a0c04
 			}
-
+			
 			@Override
 			public void mouseDoubleClick(MouseEvent arg0) {
-				
+
 			}
 		});
-<<<<<<< HEAD
 		
 		Button button1 = new Button(composite, SWT.PUSH);
 		button1.setSize(100, 50);
@@ -228,6 +172,7 @@ public class Main {
 					gc.setLineWidth(2);
 					Point beginPoint = list.get(i);
 					Point endPoint = list.get((i + 1) % list.size());
+					gc.setForeground(getAreaPointColor());
 					gc.drawLine(beginPoint.x, beginPoint.y, endPoint.x, endPoint.y);
 					gc.dispose();
 				}
@@ -243,13 +188,10 @@ public class Main {
 				
 			}
 		});
-=======
->>>>>>> df7c2ddde3a15134fedd0ea917ef4ceb932a0c04
 		Button button2 = new Button(composite, SWT.PUSH);
 		button2.setText("相交计算");
 		Button button3 = new Button(composite, SWT.PUSH);
 		button3.setText("清空");
-<<<<<<< HEAD
 	}
 	
 	private Color getAreaPointColor() {
@@ -276,7 +218,5 @@ public class Main {
         mb.setText("Error");
         mb.setMessage(message);
         mb.open();
-=======
->>>>>>> df7c2ddde3a15134fedd0ea917ef4ceb932a0c04
 	}
 }
