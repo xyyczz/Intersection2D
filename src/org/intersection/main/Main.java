@@ -86,6 +86,11 @@ public class Main {
 					Main.this.messageBox("请先选择A/B区域");
 					return;
 				}
+				// 点去重
+				Point point = new Point(arg0.x, arg0.y);
+				if (areaContainsPoint(point)) {
+					return;
+				}
 				List<Point> list = getAreaPointList();
 				GC gc = new GC(composite);
 				gc.setForeground(getAreaPointColor());
@@ -172,7 +177,7 @@ public class Main {
 				list = GrahamScan.grahamScan(list);
 				for (int i = 0; i < list.size(); i++) {
 					GC gc = new GC(mainView.left);
-					gc.setLineWidth(2);
+//					gc.setLineWidth(2);
 					Point beginPoint = list.get(i);
 					Point endPoint = list.get((i + 1) % list.size());
 					gc.setForeground(getAreaPointColor());
@@ -195,6 +200,14 @@ public class Main {
 		button2.setText("相交计算");
 		Button button3 = new Button(composite, SWT.PUSH);
 		button3.setText("清空");
+	}
+	
+	private boolean areaContainsPoint(Point point) {
+		if (this.areaButton == this.areaAButton) {
+			return this.listA.contains(point);
+		} else {
+			return this.listB.contains(point);
+		}
 	}
 	
 	private Color getAreaPointColor() {
