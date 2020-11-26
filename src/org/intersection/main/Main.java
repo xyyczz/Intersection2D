@@ -200,6 +200,22 @@ public class Main {
 		button2.setText("相交计算");
 		Button button3 = new Button(composite, SWT.PUSH);
 		button3.setText("清空");
+		button3.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseUp(MouseEvent arg0) {
+				
+			}
+			
+			@Override
+			public void mouseDown(MouseEvent arg0) {
+			}
+			
+			@Override
+			public void mouseDoubleClick(MouseEvent arg0) {
+				
+			}
+		});
 	}
 	
 	private boolean areaContainsPoint(Point point) {
