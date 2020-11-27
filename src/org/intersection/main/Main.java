@@ -238,6 +238,8 @@ public class Main {
 				left.redraw();
 				listA.clear();
 				listB.clear();
+				listAConvexHull.clear();
+				listBConvexHull.clear();
 			}
 			
 			@Override
@@ -266,6 +268,10 @@ public class Main {
 			gc.fillPolygon(pointListToArray(this.listAConvexHull));
 			gc.setBackground(display.getSystemColor(SWT.COLOR_BLUE));
 			gc.fillPolygon(pointListToArray(this.listBConvexHull));
+			
+			messageBox("相交");
+		} else {
+			messageBox("不相交");
 		}
 	}
 	
