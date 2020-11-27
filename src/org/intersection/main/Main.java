@@ -13,6 +13,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -28,7 +29,7 @@ public class Main {
 	public Display display;
 	public Shell shell;
 	
-	public Composite left;
+	public Canvas left;
 	/** 选择的区域按钮 */
 	public Button areaButton;
 	/** A区域按钮 */
@@ -69,12 +70,12 @@ public class Main {
 	
 	private void createLeftView() {
 		Rectangle clientArea = this.shell.getClientArea();
-		Composite composite = new Composite(this.shell, SWT.BORDER);
-		this.left = composite;
-		composite.setLayoutData(new RowData((int)(clientArea.width * 0.7), clientArea.height));
+		Canvas canvas = new Canvas(this.shell, SWT.BORDER);
+		this.left = canvas;
+		canvas.setLayoutData(new RowData((int)(clientArea.width * 0.7), clientArea.height));
 //		composite.setBackground(display.getSystemColor(SWT.COLOR_BLUE));
 		
-		composite.addMouseListener(new MouseListener() {
+		canvas.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseUp(MouseEvent arg0) {
 				
@@ -92,7 +93,7 @@ public class Main {
 					return;
 				}
 				List<Point> list = getAreaPointList();
-				GC gc = new GC(composite);
+				GC gc = new GC(canvas);
 				gc.setForeground(getAreaPointColor());
 				gc.drawPoint(arg0.x, arg0.y);
 //				gc.setBackground(display.getSystemColor(SWT.COLOR_RED));
@@ -209,6 +210,9 @@ public class Main {
 			
 			@Override
 			public void mouseDown(MouseEvent arg0) {
+				left.redraw();
+				listA.clear();
+				listB.clear();
 			}
 			
 			@Override
