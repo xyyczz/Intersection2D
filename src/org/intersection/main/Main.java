@@ -2,6 +2,7 @@ package org.intersection.main;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -19,6 +20,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.intersection.algorithm.GrahamScan;
+import org.intersection.algorithm.Sat;
+import org.intersection.support.Vector2D;
 
 /**
  * 主界面，左区域画板，右区域，控制按钮
@@ -38,6 +41,10 @@ public class Main {
 	public List<Point> listA = new ArrayList<>();
 	/** B区域点列表 */
 	public List<Point> listB = new ArrayList<>();
+	/** A区域点凸包列表 */
+	public List<Point> listAConvexHull = new ArrayList<>();
+	/** B区域点凸包列表 */
+	public List<Point> listBConvexHull = new ArrayList<>();
 
 	public static void main(String[] args) {
 		mainView = new Main();
@@ -176,6 +183,7 @@ public class Main {
 					return;
 				}
 				list = GrahamScan.grahamScan(list);
+				cacheConvexHullPoints(list);
 				for (int i = 0; i < list.size(); i++) {
 					GC gc = new GC(mainView.left);
 //					gc.setLineWidth(2);
@@ -199,6 +207,23 @@ public class Main {
 		});
 		Button button2 = new Button(composite, SWT.PUSH);
 		button2.setText("相交计算");
+		button2.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseUp(MouseEvent arg0) {
+				
+			}
+			
+			@Override
+			public void mouseDown(MouseEvent arg0) {
+				intersection();
+			}
+			
+			@Override
+			public void mouseDoubleClick(MouseEvent arg0) {
+				
+			}
+		});
 		Button button3 = new Button(composite, SWT.PUSH);
 		button3.setText("清空");
 		button3.addMouseListener(new MouseListener() {
@@ -220,6 +245,46 @@ public class Main {
 				
 			}
 		});
+	}
+	
+	private void intersection() {
+		if (this.listA == null || this.listB == null) {
+			messageBox("请先区域选点");
+			return;
+		}
+		if (this.listAConvexHull == null || this.listBConvexHull == null) {
+			messageBox("请先凸包计算");
+			return;
+		}
+		List<Vector2D> listA = this.listAConvexHull.stream().map(point -> new Vector2D(point.x, point.y)).collect(Collectors.toList());
+		List<Vector2D> listB = this.listBConvexHull.stream().map(point -> new Vector2D(point.x, point.y)).collect(Collectors.toList());
+		boolean intersection = Sat.intersection(listA, listB);
+		if (intersection) {
+			GC gc = new GC(left);
+			gc.setXORMode(true);
+			gc.setBackground(display.getSystemColor(SWT.COLOR_RED));
+			gc.fillPolygon(pointListToArray(this.listAConvexHull));
+			gc.setBackground(display.getSystemColor(SWT.COLOR_BLUE));
+			gc.fillPolygon(pointListToArray(this.listBConvexHull));
+		}
+	}
+	
+	private int[] pointListToArray(List<Point> list) {
+		int[] points = new int[list.size() * 2];
+		for (int i = 0; i < list.size(); i++) {
+			Point point = list.get(i);
+			points[i * 2] = point.x;
+			points[i * 2 + 1] = point.y;
+		}
+		return points;
+	}
+	
+	private void cacheConvexHullPoints(List<Point> list) {
+		if (this.areaButton == this.areaAButton) {
+			this.listAConvexHull = list;
+		} else {
+			this.listBConvexHull = list;
+		}
 	}
 	
 	private boolean areaContainsPoint(Point point) {
