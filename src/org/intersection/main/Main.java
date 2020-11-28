@@ -51,10 +51,10 @@ public class Main {
 		Display display = Display.getDefault();
 		mainView.display = display;
 		mainView.shell = new Shell(display, SWT.SHELL_TRIM); // 创建窗口对象
-		mainView.shell.setLocation(new Point(100, 100));
 		mainView.shell.setText("Intersection");
 		mainView.shell.setSize(700, 500); // 设置窗口大小
 		mainView.shell.setForeground(display.getSystemColor(SWT.COLOR_RED));
+		mainView.setShellScreenCenter();
 		RowLayout rowLayout = new RowLayout();
 		mainView.shell.setLayout(rowLayout);
 		
@@ -68,6 +68,14 @@ public class Main {
 			}
 		}
 		display.dispose();
+	}
+	
+	private void setShellScreenCenter() {
+		Rectangle clientArea = shell.getMonitor().getClientArea();
+		Rectangle shellArea = shell.getClientArea();
+		int x = clientArea.width / 2 - shellArea.width / 2;
+		int y = clientArea.height / 2 - shellArea.height / 2;
+		shell.setLocation(x, y);
 	}
 	
 	private void createViews() {
