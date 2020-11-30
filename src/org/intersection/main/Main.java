@@ -15,8 +15,10 @@ import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.intersection.algorithm.GrahamScan;
@@ -45,6 +47,8 @@ public class Main {
 	public List<Point> listAConvexHull = new ArrayList<>();
 	/** B区域点凸包列表 */
 	public List<Point> listBConvexHull = new ArrayList<>();
+	/** 耗时 */
+	public Label labetCostValue;
 
 	public static void main(String[] args) {
 		mainView = new Main();
@@ -213,6 +217,18 @@ public class Main {
 				
 			}
 		});
+		
+		Composite compositeTimes = new Composite(composite, SWT.BORDER);
+		compositeTimes.setLayout(new FillLayout());
+		Label label = new Label(compositeTimes, SWT.NONE);
+		label.setText("次数:");
+		Combo combo = new Combo(compositeTimes, SWT.ABORT);
+		combo.add("1");
+		combo.add("1000");
+		combo.add("10000");
+		combo.add("100000");
+		combo.select(0);
+		
 		Button button2 = new Button(composite, SWT.PUSH);
 		button2.setText("相交计算");
 		button2.addMouseListener(new MouseListener() {
@@ -224,7 +240,10 @@ public class Main {
 			
 			@Override
 			public void mouseDown(MouseEvent arg0) {
-				intersection();
+				int index = combo.getSelectionIndex();
+				String item = combo.getItem(index);
+				int num = Integer.valueOf(item);
+				intersection(num);
 			}
 			
 			@Override
@@ -232,6 +251,15 @@ public class Main {
 				
 			}
 		});
+		
+		Composite compositeTime = new Composite(composite, SWT.BORDER);
+		compositeTime.setLayout(new FillLayout());
+		Label labelCost = new Label(compositeTime, SWT.NONE);
+		labelCost.setText("耗时:");
+		this.labetCostValue = new Label(compositeTime, SWT.NONE);
+		Label labelMs = new Label(compositeTime, SWT.NONE);
+		labelMs.setText("ms");
+		
 		Button button3 = new Button(composite, SWT.PUSH);
 		button3.setText("清空");
 		button3.addMouseListener(new MouseListener() {
@@ -257,7 +285,7 @@ public class Main {
 		});
 	}
 	
-	private void intersection() {
+	private void intersection(int num) {
 		if (this.listA == null || this.listB == null) {
 			messageBox("请先区域选点");
 			return;
@@ -268,7 +296,13 @@ public class Main {
 		}
 		List<Vector2D> listA = this.listAConvexHull.stream().map(point -> new Vector2D(point.x, point.y)).collect(Collectors.toList());
 		List<Vector2D> listB = this.listBConvexHull.stream().map(point -> new Vector2D(point.x, point.y)).collect(Collectors.toList());
-		boolean intersection = Sat.intersection(listA, listB);
+		boolean intersection = false;
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < num; i++) {
+			intersection = Sat.intersection(listA, listB);
+		}
+		long end = System.currentTimeMillis();
+		this.labetCostValue.setText(Long.toString(end - start));
 		if (intersection) {
 			GC gc = new GC(left);
 			gc.setXORMode(true);
