@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.intersection.algorithm.Gjk;
 import org.intersection.algorithm.GrahamScan;
 import org.intersection.algorithm.Sat;
 import org.intersection.support.Vector2D;
@@ -49,6 +50,8 @@ public class Main {
 	public List<Point> listBConvexHull = new ArrayList<>();
 	/** 耗时 */
 	public Label labetCostValue;
+	/** 算法 */
+	public Combo comboAlgorithm;
 
 	public static void main(String[] args) {
 		mainView = new Main();
@@ -229,6 +232,15 @@ public class Main {
 		combo.add("100000");
 		combo.select(0);
 		
+		Composite compositeAlgorithm = new Composite(composite, SWT.BORDER);
+		compositeAlgorithm.setLayout(new FillLayout());
+		Label labelAlgorithm = new Label(compositeAlgorithm, SWT.NONE);
+		labelAlgorithm.setText("算法:");
+		this.comboAlgorithm = new Combo(compositeAlgorithm, SWT.ABORT);
+		comboAlgorithm.add("SAT");
+		comboAlgorithm.add("GKJ");
+		comboAlgorithm.select(0);
+		
 		Button button2 = new Button(composite, SWT.PUSH);
 		button2.setText("相交计算");
 		button2.addMouseListener(new MouseListener() {
@@ -297,9 +309,15 @@ public class Main {
 		List<Vector2D> listA = this.listAConvexHull.stream().map(point -> new Vector2D(point.x, point.y)).collect(Collectors.toList());
 		List<Vector2D> listB = this.listBConvexHull.stream().map(point -> new Vector2D(point.x, point.y)).collect(Collectors.toList());
 		boolean intersection = false;
+		int index = this.comboAlgorithm.getSelectionIndex();
+		boolean sat = "SAT".equals(this.comboAlgorithm.getItem(index));
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < num; i++) {
-			intersection = Sat.intersection(listA, listB);
+			if (sat) {
+				intersection = Sat.intersection(listA, listB);
+			} else {
+				intersection = Gjk.intersection(listA, listB);
+			}
 		}
 		long end = System.currentTimeMillis();
 		this.labetCostValue.setText(Long.toString(end - start));
